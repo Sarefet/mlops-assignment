@@ -32,8 +32,14 @@ async def fire_one(
     url: str,
     question: dict,
     results: list[dict],
+    *,
+    run: str,
 ) -> None:
-    payload = {"question": question["question"], "db": question["db_id"]}
+    payload = {
+        "question": question["question"],
+        "db": question["db_id"],
+        "tags": {"phase": "load_test", "run": run},
+    }
     t0 = time.monotonic()
     status = "ok"
     err: str | None = None
@@ -74,7 +80,11 @@ async def drive(args: argparse.Namespace) -> None:
         next_fire = start
         while time.monotonic() < deadline:
             q = rnd.choice(questions)
-            tasks.append(asyncio.create_task(fire_one(session, args.agent_url, q, results)))
+            tasks.append(
+                asyncio.create_task(
+                    fire_one(session, args.agent_url, q, results, run=args.run)
+                )
+            )
             next_fire += interval
             sleep_for = next_fire - time.monotonic()
             if sleep_for > 0:
@@ -120,6 +130,11 @@ def main() -> None:
     p.add_argument("--duration", type=int, default=300, help="seconds to drive load")
     p.add_argument("--agent-url", default=AGENT_URL_DEFAULT)
     p.add_argument("--out", type=Path, default=DEFAULT_OUT)
+    p.add_argument(
+        "--run",
+        default="load_test",
+        help="Langfuse metadata tag (e.g. baseline_load, after_tuning_load)",
+    )
     args = p.parse_args()
     asyncio.run(drive(args))
 
