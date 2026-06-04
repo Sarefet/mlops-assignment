@@ -45,19 +45,19 @@ uv run python evals/run_eval.py --limit 3 --out results/eval_smoke.json
 `origin` is the course template (`GlebBerjoskin/mlops-assignment`). You cannot push there.
 
 ```bash
-# On github.com: Fork GlebBerjoskin/mlops-assignment → YOUR_USER/mlops-assignment
+# One-time: fork https://github.com/GlebBerjoskin/mlops-assignment → Sarefet/mlops-assignment
+# (GitHub UI: Fork button on the assignment repo)
 cd ~/my-repos/ml_ops_hw/inference-o11y
-git remote add mine https://github.com/YOUR_GITHUB_USER/mlops-assignment.git
-git add -A && git commit -m "HW2: agent, evals, grafana, local scripts"
+git remote add mine https://github.com/Sarefet/mlops-assignment.git 2>/dev/null || git remote set-url mine https://github.com/Sarefet/mlops-assignment.git
 git push -u mine main
 ```
 
-Replace `YOUR_GITHUB_USER`. Course hand-in = link to **your** fork (or zip of this folder).
+Course hand-in = link to **https://github.com/Sarefet/mlops-assignment** (or zip of this folder).
 
 ### 2. On the H100 VM (clone + env)
 
 ```bash
-git clone https://github.com/YOUR_GITHUB_USER/mlops-assignment.git inference-o11y
+git clone https://github.com/Sarefet/mlops-assignment.git inference-o11y
 cd inference-o11y
 uv sync
 uv run python scripts/load_data.py
